@@ -9,6 +9,10 @@ participant Trader identified by traderId {
   o String name
   o Boolean marginThresh // margin meeting maintenance minimum
 }
+participant Administrator identified by adminId {
+  o String adminId
+  o Boolean tradingOpen 
+}
 
 enum Product {
   o OPTION
@@ -38,14 +42,20 @@ concept Contract {
 asset OpenOrder identified by ISINcode {
 	o String ISINcode
     o Order order
+    o Boolean valid
 }
 
 asset LiveContract identified by ISINcode {
 	o String ISINcode
     o Contract contract
+    o Boolean valid
 }
 
 transaction PlaceOrder {
 	o String ISINCode
 	o Order order
 }
+transaction SOD {
+	o String adminId
+}
+transaction Test {}
