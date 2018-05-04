@@ -4,39 +4,46 @@
 
 namespace org.acme.otc
 
+event NettedDebts {
+  o DateTime date
+  o String[] debts
+}
+
 participant Trader identified by traderId {
   o String traderId
-  o String name
-  o Boolean marginThresh // margin meeting maintenance minimum
+  o Double margin
 }
 participant Administrator identified by adminId {
   o String adminId
   o Boolean tradingOpen 
 }
 
-enum Product {
+/**enum Product {
   o OPTION
   o FUTURE
   o FORWARD
-}
+}*/
 
-concept Order {
-	o String traderID
-    o Product productType
+concept OrderDetails {
+ 	o String productType
     o String asset // commodity? underlying? - may later need typing
-    o Boolean buy
     o Double notionalAmount
     o DateTime expiry // only needs to specify date
 }
 
+concept Order {
+	o String traderId
+    o String otherTraderId
+    o Boolean buy
+    o OrderDetails details
+}
+
 concept Contract {
-	o String buyerID // buyer/seller vs maker/taker?
-    o String sellerID
-    o Product productType
-    o String asset // commodity? underlying? - may later need typing
-    o Double notionalAmount
+	o String buyerId // buyer/seller vs maker/taker?
+    o String sellerId
+    o OrderDetails details
     o Double value
-    o DateTime expiry
+    
 }
 
 asset OpenOrder identified by ISINcode {
@@ -50,12 +57,19 @@ asset LiveContract identified by ISINcode {
     o Contract contract
     o Boolean valid
 }
+asset Underlying identified by Ticker{
+  	o String Ticker
+    o Double price
+}
 
+transaction SetupDemo {}
 transaction PlaceOrder {
-	o String ISINCode
 	o Order order
 }
 transaction SOD {
 	o String adminId
 }
-transaction Test {}
+
+transaction EOD {
+	o String adminId
+}
