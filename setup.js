@@ -28,23 +28,25 @@ async function setupDemo(setupDemo) { // eslint-disable-line no-unused-vars
     const NS_D = 'org.vda';
 
     const trader_names = ['1','2','3','4'];
-  	const adminName = 'adminId:1';
+    const adminName = 'adminId:1';
 
     // register manufacturers
-  	const admin=factory.newResource('org.acme.otc', 'Administrator', adminName);
-  	
+    const admin=factory.newResource('org.acme.otc', 'Administrator', adminName);
+    admin.tradingOpen=false;
+    
     const manufacturerRegistry = await getParticipantRegistry('org.acme.otc.Administrator');
+    
     await manufacturerRegistry.add(admin);
 
     // register private owners
     const traders = trader_names.map(name => {
-      	var trader=factory.newResource('org.acme.otc', 'Trader', name);
-      	trader.margin=0;
+        var trader=factory.newResource('org.acme.otc', 'Trader', name);
+        trader.margin=0;
         return trader;
     });
     const traderRegistry = await getParticipantRegistry('org.acme.otc.Trader');
     await traderRegistry.addAll(traders);
-	/**
+    /**
     // register regulator
     const regulator = factory.newResource(NS, 'Regulator', 'regulator');
     const regulatorRegistry = await getParticipantRegistry(NS + '.Regulator');
